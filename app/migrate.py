@@ -9,14 +9,14 @@ def migrate():
 
     # remove TODAS from sheetnames variable
     sheetnames = book.sheetnames
-    sheetnames.remove("TODAS")
 
     for hoja in sheetnames:
-        localidad = Localidad(hoja)
+        sheet = book[hoja]
+        tecnico = sheet["D2"].value
+        localidad = Localidad(hoja, tecnico, "activa")
         db.session.add(localidad)
         db.session.commit()
 
-        sheet = book[hoja]
         for row in range(2, sheet.max_row + 1):
             unidad = sheet.cell(row, 1).value
             unidad = unidad.strip() if unidad else unidad
@@ -26,7 +26,6 @@ def migrate():
                 break
 
             tipo = sheet.cell(row, 3).value
-
             codigo = sheet.cell(row, 2).value
 
             u = Unidad(unidad, codigo, localidad.id, tipo)
