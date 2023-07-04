@@ -13,11 +13,13 @@ def login_handler(data):
         username=data["username"]).first()
     if usuario:
         if bcrypt.checkpw(data["password"].encode("utf-8"), usuario.password.encode("utf-8")):
+            usuario = usuario.to_dict()
+            usuario.pop("password")
             token = jwt.encode({
-                "user": usuario.to_dict(),
+                "user": usuario,
                 "exp": datetime.utcnow() + timedelta(hours=1)
             }, os.environ["JWT_SECRET"], algorithm="HS256")
-            
+
             return token, 200
         else:
             return {"message": "Contraseña incorrecta"}, 401

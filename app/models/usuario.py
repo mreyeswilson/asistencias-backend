@@ -1,5 +1,5 @@
 from db import db
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, Boolean
 from sqlalchemy.orm import mapped_column
 
 
@@ -13,6 +13,8 @@ class Usuario(db.Model):
     email = Column(String(50), nullable=False)
     username = Column(String(50), nullable=False)
     password = Column(String(50), nullable=False)
+    is_admin = Column(Boolean, nullable=False, default=False)
+    is_active = Column(Boolean, nullable=False, default=True)
 
     def to_dict(self):
         return {
@@ -21,5 +23,7 @@ class Usuario(db.Model):
             "apellido": self.apellido,
             "email": self.email,
             "username": self.username,
-            "password": self.password
+            "password": self.password,
+            "is_admin": self.is_admin,
+            "is_active": self.is_active
         }
